@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { TaskDto } from './task.dto';
 
 @Injectable()
@@ -19,5 +19,16 @@ export class TaskService {
         }
 
         throw new NotFoundException(`Task com id ${id} não existe`)
+    }
+
+    upDate(task:TaskDto){
+        let taskIndex = this.tasks.findIndex(t => t.id === task.id);
+
+        if(taskIndex >= 0){
+            this.tasks[taskIndex] = task;
+            return;
+        }
+
+        throw new HttpException(`Task com id ${task.id} não existe`,HttpStatus.BAD_REQUEST)
     }
 }
